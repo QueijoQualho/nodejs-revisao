@@ -7,6 +7,6 @@ const router = express.Router();
 router.get("/posts", getPosts);
 router.post("/post", [validTitle, validContent], createPost);
 router.delete('/post/:id', deletePost)
-router.patch('post/:id', patchPost)
+router.patch('/post/:id', patchPost)
 
 export default router;
