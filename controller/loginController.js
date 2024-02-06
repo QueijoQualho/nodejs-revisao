@@ -36,15 +36,26 @@ async function login(req, res, next) {
       throw error;
     }
 
-    const { email, senha } = req.body;
+    const { email, password } = req.body;
 
-    const loginUser = await User.findOne({
-        email: email,
-        senha: senha
-    })
+    const emailUser = await User.findOne({email})
 
-    if(loginUser){
-        res.status(200).json({ message: 'Login bem-sucedido', user: loginUser });
+    if(!emailUser){
+      const error = new Error('Email inválidas');
+      error.status = 401;
+      throw error;
+    } 
+
+    const passwordUser = await User.findOne({password}) 
+
+    if(!passwordUser){
+      const error = new Error('Senha inválidas');
+      error.status = 401;
+      throw error;
+    }
+
+    if(emailUser && passwordUser){
+        res.status(200).json({ message: 'Login bem-sucedido', user: emailUser});
     } else {
         const error = new Error('Credenciais inválidas');
         error.status = 401;

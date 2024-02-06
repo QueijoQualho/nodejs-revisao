@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import User from '../models/loginBD';
+import User from '../models/loginBD.js';
 
 export const validTitle = body("title")
     .trim()
