@@ -1,4 +1,5 @@
 import { body } from 'express-validator';
+import User from '../models/loginBD';
 
 export const validTitle = body("title")
     .trim()
@@ -21,5 +22,15 @@ export const validPassword = body("password")
 
 export const validName = body("name")
     .isLength({ min: 5 })
-    .withMessage('Nome deve ter no mínimo 5 caracteres')
+    .withMessage('Name must be at least 5 characters long.')
+
+export const validIfEmailExist = body("email") 
+    .custom(async (value, {req})=> {
+        const existUser = await User.findOne({email: value})
+        if(existUser){
+            throw new Error("This email is already in use")
+        }
+
+        return true
+    })
     

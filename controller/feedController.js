@@ -31,7 +31,6 @@ function createPost(req, res, next) {
     }
 
     res.status(201).json({
-
         error: false,
         msg: "Post criado com sucesso"
     })
