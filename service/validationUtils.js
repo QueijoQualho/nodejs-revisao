@@ -8,7 +8,6 @@ const handleValidationErrors = (req, res, next) => {
     error.status = 422;
 
     const errorMessages = errors.array().map((error) => {
-      console.log("rogerio rocha o apresentador",error);
       return {
         param: error.value,
         msg: `O campo '${error.path}' falhou na validação: ${error.msg}`,

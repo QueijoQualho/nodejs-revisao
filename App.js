@@ -2,6 +2,9 @@ import express from "express";
 import router from "./router/routerMain.js";
 import cors from "cors";
 import mongoose from "mongoose";
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+
 
 /* QUANDO MEXER COM BD MUDAR AS FUNÇÔES PARA ASYSC SE NÃO DA ERRO CRL  */
 
@@ -10,6 +13,8 @@ const port = 3001;
 
 app.use(express.json());
 app.use(cors());
+app.use(compression());
+app.use(cookieParser());
 
 app.use("/", router);
 

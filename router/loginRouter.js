@@ -1,11 +1,20 @@
-import express from 'express'
-import { register, login } from "../controller/loginController.js";
-import { validEmail, validIfEmailExist, validName, validPassword } from '../service/validators.js';
+import express from "express";
+import { register, login } from "../controller/authUser.js";
+import {
+  validEmail,
+  validIfEmailExist,
+  validName,
+  validPassword,
+} from "../service/validators.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/singup', [validEmail, validName, validPassword, validIfEmailExist], register)
+router.post(
+  "/singup",
+  [validName, validEmail, validPassword, validIfEmailExist],
+  register
+);
 
-router.post('/login', [validEmail, validPassword], login)
+router.post("/login", [validEmail, validPassword], login);
 
-export default router
+export default router;
