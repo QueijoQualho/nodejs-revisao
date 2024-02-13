@@ -16,10 +16,10 @@ const handleValidationErrors = (req, res, next) => {
 
     error.errors = errorMessages;
 
-    return next(error);
+    return error;
   }
 
-  return;
+  return null;
 };
 
 export default handleValidationErrors;

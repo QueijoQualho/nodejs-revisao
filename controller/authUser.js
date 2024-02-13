@@ -4,7 +4,11 @@ import handleValidationErrors from "../service/validationUtils.js";
 
 async function register(req, res, next) {
   try {
-    await handleValidationErrors(req, res, next);
+    const validationError = handleValidationErrors(req, res, next);
+
+    if (validationError) {
+      throw validationError;
+    }
 
     const { name, email, password } = req.body;
 
@@ -18,7 +22,7 @@ async function register(req, res, next) {
       },
     });
 
-    return res.status(200).json(user).end();
+    return res.status(200).json(user);
   } catch (error) {
     console.error("Erro no cadastro", error);
     next(error);
@@ -27,7 +31,11 @@ async function register(req, res, next) {
 
 async function login(req, res, next) {
   try {
-    await handleValidationErrors(req, res, next);
+    const validationError = handleValidationErrors(req, res, next);
+
+    if (validationError) {
+      throw validationError;
+    }
 
     const { email, password } = req.body;
 
@@ -57,12 +65,12 @@ async function login(req, res, next) {
 
     await user.save();
 
-    res.cookie("Cookie-User", user.authentication.sessionToken, {
+    res.cookie("AUTH-API", user.authentication.sessionToken, {
       domain: "localhost",
       path: "/",
     });
 
-    return res.status(200).json(user).end();
+    return res.status(200).json(user);
   } catch (error) {
     console.error("Erro no login", error);
     next(error);
