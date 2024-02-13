@@ -1,73 +1,86 @@
-import { validationResult } from "express-validator"
+import fs from "fs";
+import {
+  createPost,
+  deletePostById,
+  getPostbyID,
+  getPosts,
+} from "../models/postBD.js";
+import handleValidationErrors from "../service/validationUtils.js";
 
-function getPosts(req, res, next) {
-    res.status(200).json({
-        posts: [
-            {
-                title: "Primeiro post",
-                content: "Este é o meu primeiro post!"
-            }
-        ]
-    })
+async function getAllPosts(req, res, next) {
+  try {
+    const data = await getPosts();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 }
 
-function createPost(req, res, next) {
-    const title = req.body.title
-    const content = req.body.content
+async function buildPost(req, res, next) {
+  try {
+    const validationError = handleValidationErrors(req, res, next);
 
-    const erros = validationResult(req)
-
-    if(!erros.isEmpty()){
-        const error = new Error("Validação deu errado")
-        error.status = 422
-        throw error
+    if (validationError) {
+      throw validationError;
     }
 
-    if (!title || !content) {
-        res.status(400).json({
-            error: true,
-            msg: "Você precisa enviar os dados corretamente"
-        })
-    }
+    const { title, content } = req.body;
+    const file = req.file;
 
-    res.status(201).json({
-        error: false,
-        msg: "Post criado com sucesso"
-    })
+    const post = await createPost({
+      title,
+      content,
+      src: file.path,
+    });
 
-
+    return res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 }
 
-function deletePost(req, res, next) {
+async function deletePost(req, res, next) {
+  try {
     const id = req.params.id;
 
-    if (!id) {
-        res.status(400).json({
-            error: true,
-            msg: "O parametro de ID do post não foi enviado"
-        })
+    const data = await deletePostById(id);
+
+    if (!data) {
+      throw Error("Post não encontrado");
     }
 
-    res.status(201).json({
-        error: "false",
-        msg: `O post ${id} foi deletado`
-    })
+    fs.unlinkSync(data.src);
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 }
 
-function patchPost(req, res, next) {
+async function patchPost(req, res, next) {
+  try {
     const id = req.params.id;
+    const { title, content } = req.body;
+
+    const post = await getPostbyID(id);
 
     if (!id) {
-        res.status(400).json({
-            error: true,
-            msg: "O parametro de ID do post não foi enviado"
-        })
+      throw Error("Post não encontrado");
     }
 
-    res.status(201).json({
-        error: "false",
-        msg: `O post ${id} foi alterado`
-    })
+    post.title = title;
+    post.content = content;
+
+    await post.save();
+
+    return res.status(201).send(post);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 }
 
-export { getPosts, createPost, deletePost, patchPost};
+export { getAllPosts, buildPost, deletePost, patchPost };

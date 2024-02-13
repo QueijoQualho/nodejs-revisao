@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 
-
 /* QUANDO MEXER COM BD MUDAR AS FUNÇÔES PARA ASYSC SE NÃO DA ERRO CRL  */
 
 const app = express();
@@ -26,10 +25,11 @@ app.use((error, req, res, next) => {
     }));
     return res.status(error.status || 422).json({ errors: validationErrors });
   }
-  return res.status(500).json({ error: "Internal Server Error" });
+  return res.status(error.status || 500).json({ error: "Internal Server Error" } );
 });
 
 /* Conexão banco de dados + servidor */
+
 mongoose
   .connect("mongodb://localhost:27017/test", {
     useNewUrlParser: true,

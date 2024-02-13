@@ -6,14 +6,13 @@ async function getAllUsers(req, res, next) {
     return res.status(200).json(data);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400);
+    next(error);
   }
 }
 
 async function deleteUser(req, res, next) {
   try {
     const id = req.params.id;
-
     const data = await deleteUserById(id);
 
     if(!data){
@@ -23,7 +22,7 @@ async function deleteUser(req, res, next) {
     return res.json(data);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400);
+    next(error);
   }
 }
 
@@ -44,7 +43,7 @@ async function patchUser(req, res, next) {
     return res.json(user);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400);
+    next(error);
   }
 }
 
