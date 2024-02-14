@@ -1,6 +1,7 @@
 node_modules
-.log
-.png
-.svg
-.jpg
-.jpeg
+*.log
+*.png
+*.svg
+*.jpg
+*.jpeg
+*.jfif

@@ -64,19 +64,31 @@ async function patchPost(req, res, next) {
   try {
     const id = req.params.id;
     const { title, content } = req.body;
+    const file = req.file;
 
-    const post = await getPostbyID(id);
+    const data = await getPostbyID(id);
 
-    if (!id) {
+    if (!data) {
       throw Error("Post não encontrado");
     }
 
-    post.title = title;
-    post.content = content;
+    if(title){
+      data.title = title;
+    }
 
-    await post.save();
+    if(content){
+      data.content = content;
+    }
 
-    return res.status(201).send(post);
+    if(file){
+      fs.unlinkSync(data.src);
+      data.src = file.path
+      console.log("asada");
+    }
+
+    await data.save();
+
+    return res.status(201).json(data);
   } catch (error) {
     console.log(error);
     next(error);
