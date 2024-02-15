@@ -11,6 +11,19 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+    const allowedMimes = ['image/jpeg', 'image/png'];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type, only PNG and JPEG are allowed'));
+    }
+  };
+
+  const limits = {
+    fileSize:  8 * 1024 * 1024, // 8 MB
+  };
+
+const upload = multer({ storage: storage, fileFilter: fileFilter, limits: limits });
 
 export default upload;

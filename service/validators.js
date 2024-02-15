@@ -12,6 +12,8 @@ export const validContent = body("content")
   .isLength({ min: 5 })
   .withMessage("Invalid value for content!");
 
+export const validImage = body
+
 /* USER VALIDATORS */
 export const validName = body("name")
   .if((value, { req }) => req.body.name !== undefined && req.body.name !== null)

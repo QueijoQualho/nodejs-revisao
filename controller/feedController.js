@@ -19,14 +19,17 @@ async function getAllPosts(req, res, next) {
 
 async function buildPost(req, res, next) {
   try {
+    const { title, content } = req.body;
+    const file = req.file;
+
     const validationError = handleValidationErrors(req, res, next);
 
     if (validationError) {
+      if (file) {
+        fs.unlinkSync(file.path);
+      }
       throw validationError;
     }
-
-    const { title, content } = req.body;
-    const file = req.file;
 
     const post = await createPost({
       title,
@@ -72,17 +75,17 @@ async function patchPost(req, res, next) {
       throw Error("Post não encontrado");
     }
 
-    if(title){
+    if (title) {
       data.title = title;
     }
 
-    if(content){
+    if (content) {
       data.content = content;
     }
 
-    if(file){
+    if (file) {
       fs.unlinkSync(data.src);
-      data.src = file.path
+      data.src = file.path;
       console.log("asada");
     }
 
