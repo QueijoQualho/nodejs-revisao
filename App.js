@@ -22,9 +22,9 @@ app.use(cookieParser());
 app.use("/", router);
 
 app.use((error, req, res, next) => {
-  if (error.errors && error.errors.length > 0) {
-    const validationErrors = error.errors.map((err) => ({
-      field: err.param,
+  if (error.length > 0) {
+    const validationErrors = error.map((err) => ({
+      field: err.path,
       message: err.msg,
     }));
     return res.status(error.status || 422).json({ errors: validationErrors });

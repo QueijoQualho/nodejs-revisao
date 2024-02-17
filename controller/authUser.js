@@ -1,13 +1,13 @@
+import { validationResult } from "express-validator";
 import { authentication, random } from "../helpers/cryptography.js";
 import { createUser, getUsersbyEmail } from "../models/userBD.js";
-import handleValidationErrors from "../service/validationUtils.js";
 
 async function register(req, res, next) {
   try {
-    const validationError = handleValidationErrors(req, res, next);
+    const errors = validationResult(req)
 
-    if (validationError) {
-      throw validationError;
+    if (!errors.isEmpty()) {
+      throw errors.array();
     }
 
     const { name, email, password } = req.body;
@@ -31,10 +31,10 @@ async function register(req, res, next) {
 
 async function login(req, res, next) {
   try {
-    const validationError = handleValidationErrors(req, res, next);
+    const errors = validationResult(req)
 
-    if (validationError) {
-      throw validationError;
+    if (!errors.isEmpty()) {
+      throw errors.array();
     }
 
     const { email, password } = req.body;
