@@ -5,7 +5,7 @@ import {
   getPostbyID,
   getPosts,
 } from "../models/postBD.js";
-import handleValidationErrors from "../service/validationUtils.js";
+import { validationResult } from "express-validator";
 
 async function getAllPosts(req, res, next) {
   try {
@@ -22,13 +22,14 @@ async function buildPost(req, res, next) {
     const { title, content } = req.body;
     const file = req.file;
 
-    const validationError = handleValidationErrors(req, res, next);
+    const errors = validationResult(req);
 
-    if (validationError) {
+    if (!errors.isEmpty()) {
+    
       if (file) {
         fs.unlinkSync(file.path);
       }
-      throw validationError;
+      throw errors.array();
     }
 
     const post = await createPost({
