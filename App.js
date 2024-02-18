@@ -3,11 +3,11 @@ import router from "./router/routerMain.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import compression from "compression";
-import dotenv from 'dotenv'
+import dotenv from "dotenv";
 import dbConnection from "./bd.js";
 
-dotenv.config()
-dbConnection
+dotenv.config();
+dbConnection;
 
 /* QUANDO MEXER COM BD MUDAR AS FUNÇÔES PARA ASYSC SE NÃO DA ERRO CRL  */
 
@@ -25,17 +25,21 @@ app.use((error, req, res, next) => {
   if (error.length > 0) {
     const validationErrors = error.map((err) => ({
       field: err.path,
-      message: err.msg,
+      msg: err.msg,
     }));
-    return res.status(error.status || 422).json({ errors: validationErrors });
+    return res
+      .status(error.status || 422)
+      .json({ errors: validationErrors, error: true });
   }
   return res
     .status(error.status || 500)
-    .json({ error: "Internal Server Error" });
+    .json({ error: "Internal Server Error", error: true });
 });
 
 /* Conexão banco de dados + servidor */
 
-app.listen(port, ()=>{
+app.listen(port, () => {
   console.log(`conectado na porta ${port}`);
-})
+});
+
+export default app;

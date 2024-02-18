@@ -12,7 +12,7 @@ export const validContent = body("content")
   .isLength({ min: 5 })
   .withMessage("Invalid value for content!");
 
-export const validImage = body
+export const validImage = body;
 
 /* USER VALIDATORS */
 export const validName = body("name")
