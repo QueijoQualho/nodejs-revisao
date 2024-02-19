@@ -12,7 +12,6 @@ async function getAllPosts(req, res, next) {
     const data = await getPosts();
     return res.status(200).json(data);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
@@ -25,7 +24,6 @@ async function buildPost(req, res, next) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-    
       if (file) {
         fs.unlinkSync(file.path);
       }
@@ -38,9 +36,8 @@ async function buildPost(req, res, next) {
       src: file.path,
     });
 
-    return res.status(200).json(post);
+    return res.status(201).json(post);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
@@ -52,7 +49,9 @@ async function deletePost(req, res, next) {
     const data = await deletePostById(id);
 
     if (!data) {
-      throw Error("Post não encontrado");
+      const error = new Error("Post não encontrado");
+      error.status = 404;
+      throw error;
     }
 
     fs.unlinkSync(data.src);
@@ -73,7 +72,9 @@ async function patchPost(req, res, next) {
     const data = await getPostbyID(id);
 
     if (!data) {
-      throw Error("Post não encontrado");
+      const error = new Error("Post não encontrado");
+      error.status = 404;
+      throw error;
     }
 
     if (title) {
@@ -92,7 +93,7 @@ async function patchPost(req, res, next) {
 
     await data.save();
 
-    return res.status(201).json(data);
+    return res.status(200).json(data);
   } catch (error) {
     console.log(error);
     next(error);

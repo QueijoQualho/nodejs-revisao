@@ -4,7 +4,7 @@ import { createUser, getUsersbyEmail } from "../models/userBD.js";
 
 async function register(req, res, next) {
   try {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       throw errors.array();
@@ -31,7 +31,7 @@ async function register(req, res, next) {
 
 async function login(req, res, next) {
   try {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       throw errors.array();

@@ -1,4 +1,4 @@
-import { deleteUserById, getUsers, getUsersbyEmail, getUsersbyID } from "../models/userBD.js";
+import { deleteUserById, getUsers, getUsersbyID } from "../models/userBD.js";
 
 async function getAllUsers(req, res, next) {
   try {
@@ -15,8 +15,10 @@ async function deleteUser(req, res, next) {
     const id = req.params.id;
     const data = await deleteUserById(id);
 
-    if(!data){
-        throw Error( 'Usuário não encontrado' );
+    if (!data) {
+      const error = new Error("Usuário não encontrado");
+      error.status = 401;
+      throw error;
     }
 
     return res.json(data);
@@ -32,11 +34,11 @@ async function patchUser(req, res, next) {
     const { name } = req.body;
 
     if (!name) {
-        return res.sendStatus(400);
+      return res.sendStatus(400);
     }
 
     const user = await getUsersbyID(id);
-    
+
     user.name = name;
     await user.save();
 
