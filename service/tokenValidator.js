@@ -1,6 +1,7 @@
 import pkg from "lodash";
 const { merge, get } = pkg;
 import { getUserBySessionToken } from "../models/userBD.js";
+import { getPostbyID } from "../models/postBD.js";
 
 export const isAuthenticated = async (req, res, next) => {
   try {
@@ -34,7 +35,9 @@ export const isOwner = async (req, res, next) => {
       return res.sendStatus(400);
     }
 
-    if (currentUserId.toString() !== id) {
+    const post =  await getPostbyID(id);
+
+    if (currentUserId.toString() !== post.user.toString()) {
       return res.sendStatus(403);
     }
 

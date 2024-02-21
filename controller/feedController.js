@@ -6,6 +6,7 @@ import {
   getPosts,
 } from "../models/postBD.js";
 import { validationResult } from "express-validator";
+import { getUserBySessionToken } from "../models/userBD.js";
 
 async function getAllPosts(req, res, next) {
   try {
@@ -21,6 +22,8 @@ async function buildPost(req, res, next) {
     const { title, content } = req.body;
     const file = req.file;
 
+    const sessionToken = req.cookies["AUTH-API"];
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -30,10 +33,13 @@ async function buildPost(req, res, next) {
       throw errors.array();
     }
 
+    const user = await getUserBySessionToken(sessionToken);
+
     const post = await createPost({
       title,
       content,
       src: file.path,
+      user: user._id
     });
 
     return res.status(201).json(post);
