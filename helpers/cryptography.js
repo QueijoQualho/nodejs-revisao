@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-const SECRET = "USER-API";
+const SECRET = "AUTH-API";
 
 export const authentication = (salt, password) => {
   return crypto
