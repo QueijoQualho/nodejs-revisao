@@ -9,7 +9,8 @@ import dbConnection from "./bd.js";
 dotenv.config();
 dbConnection;
 
-/* QUANDO MEXER COM BD MUDAR AS FUNÇÔES PARA ASYSC SE NÃO DA ERRO CRL  */
+/* FAZER TESTES DECENTES PARA API DE USER E POSTS, LEMBRAR DE TESTAR OS COOKIE */
+/* TALVEZ TROCAR PATCH USER POR UPDATE */
 
 const app = express();
 const port = process.env.PORT || 3001;

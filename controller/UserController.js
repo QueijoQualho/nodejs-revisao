@@ -10,6 +10,25 @@ async function getAllUsers(req, res, next) {
   }
 }
 
+async function getUserID(req, res, next) {
+  try {
+    const id = req.params.id;
+    
+    const userData = await getUsersbyID(id);
+    
+    if(!userData){
+      const error = new Error("Usuário não encontrado");
+      error.status = 401;
+      throw error;
+    }
+
+    return res.status(200).json(userData);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
 async function deleteUser(req, res, next) {
   try {
     const id = req.params.id;
@@ -49,4 +68,4 @@ async function patchUser(req, res, next) {
   }
 }
 
-export { getAllUsers, deleteUser, patchUser };
+export { getAllUsers, deleteUser, patchUser, getUserID };
